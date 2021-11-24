@@ -1,13 +1,21 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 
-defineProps<{ msg: string }>()
-export default defineComponent({})
-const count = ref(0)
+// defineProps<{ msg: string }>()
+export default defineComponent({
+  data:function(){
+    return {
+      count:0,
+    };
+  },
+
+})
+// const count = ref(0)
+
 </script>
 
 <template>
-  <h1>{{ msg }}</h1>
+  <!-- <h1>{{ msg }}</h1> -->
 
   <p>
     Recommended IDE setup:

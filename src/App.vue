@@ -1,19 +1,18 @@
 <script lang="ts">
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import { defineComponent } from '@vue/runtime-core'
-import HelloWorld from './components/HelloWorld.vue'
+import { defineComponent } from "@vue/runtime-core";
+
+// 引入图标库
+import { QqOutlined } from "@ant-design/icons-vue";
 export default defineComponent({
-  components:{
-    HelloWorld
-  }
-})
+  components: {
+    QqOutlined,
+  },
+});
 </script>
 
-<template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Hello Vue 3 + TypeScript + Vite" />
-</template>
+<template><QqOutlined />企鹅掘金</template>
 
 <style>
 #app {
