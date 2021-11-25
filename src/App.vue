@@ -82,9 +82,6 @@ export default defineComponent({
 </template>
 
 <style>
-body {
-  background-color: #f4f5f5;
-}
 p {
   display: inline-block;
 }
@@ -104,9 +101,11 @@ li:hover {
   color: #2c3e50;
   margin-top: 1%;
   width: 1500px;
+  background-color: #f4f5f5;
 }
 #top-bar {
   margin: 0, auto;
+  background-color: white;
 }
 #top-bar a {
   font-size: 16px;
@@ -124,6 +123,7 @@ li:hover {
   margin-left: 40px;
 }
 #top-vice-bar {
+  background-color: white;
   margin-top: 2%;
 }
 #top-vice-bar ul li {
