@@ -4,6 +4,7 @@
 import { defineComponent } from "@vue/runtime-core";
 // 引入图标库
 import { QqOutlined, DownOutlined } from "@ant-design/icons-vue";
+import "./juejin_demo.css"
 export default defineComponent({
   components: {
     QqOutlined,
@@ -47,8 +48,8 @@ export default defineComponent({
     <span class="top-bar-left">
       <a-button type="dashed">登录</a-button>
     </span>
+    <hr />
   </nav>
-  <hr />
   <!-- 副导航栏 -->
   <nav id="top-vice-bar">
     <ul>
@@ -73,18 +74,30 @@ export default defineComponent({
           <li>热门</li>
           <li>最新</li>
           <li>热榜</li>
+          <hr />
         </ul>
       </div>
       <!-- 推荐帖子 -->
-      <div></div>
+      <div id="article">
+        <!-- 帖子1 -->
+        <div class="article-part">
+          <!-- 作者/时间/分类 -->
+          <ul class="article-author">
+            <li id="id">稀土君</li>
+            <li id="time">2天前</li>
+          </ul>
+          <div class="article-content">
+            <b>2021最后一次更文挑战，倒计时最后一周!错过这次要等明年啦</b>
+            <p>最后参与的机会，拿闯关奖励，抽终极幸运大奖！别犹豫啦，快来参加！</p>
+            <hr />
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <style>
-p {
-  display: inline-block;
-}
 li {
   list-style: none;
   display: inline-block;
@@ -93,67 +106,19 @@ li:hover {
   color: #007fff;
   cursor: pointer;
 }
+hr {
+  margin: 0;
+  background-color: #c8cece;
+  border: none;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  /* text-align: center; */
   color: #2c3e50;
   margin-top: 1%;
-  width: 1500px;
+  width: 100%;
   background-color: #f4f5f5;
-}
-#top-bar {
-  margin: 0, auto;
-  background-color: white;
-}
-#top-bar a {
-  font-size: 16px;
-  text-decoration: none;
-  color: rgb(134, 144, 156);
-  margin-left: 40px;
-}
-#top-bar a img {
-  margin-bottom: 5px;
-}
-#top-bar a:hover {
-  color: rgb(30, 128, 255);
-}
-.top-bar-left {
-  margin-left: 40px;
-}
-#top-vice-bar {
-  background-color: white;
-  margin-top: 2%;
-}
-#top-vice-bar ul li {
-  margin-left: 20px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-#classification ul {
-  padding: 1%;
-}
-#classification ul li {
-  display: inline-block;
-  font-size: 14px;
-  color: rgb(113, 119, 124);
-  padding-left: 20px;
-}
-#classification li:hover {
-  color: #007fff;
-  cursor: pointer;
-}
-#content {
-  width: 1060px;
-  margin: auto;
-  background-color: #f4f5f5;
-  border: 1px solid #f4f5f5;
-}
-#classification {
-  text-align: left;
-}
-#content-left {
-  background-color: white;
 }
 </style>
