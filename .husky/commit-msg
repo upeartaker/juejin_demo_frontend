@@ -3,4 +3,5 @@
 # shellcheck source=./_/husky.sh
 . "$(dirname "$0")/_/husky.sh"
 
+echo "msg check"
 npx --no-install commitlint --edit "$1"
