@@ -5,4 +5,4 @@ const setup = (app: App) => {
   app.use(Button)
 }
 
-export { setup }
+export default setup

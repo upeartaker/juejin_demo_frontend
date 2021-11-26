@@ -23,5 +23,13 @@ export default defineConfig({
   ],
   resolve: {
     alias
+  },
+  css: {
+    // css 预处理
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@import './src/assets/styles/_variable.scss';`
+      }
+    }
   }
 })
