@@ -3,6 +3,7 @@
   background-color: white;
   padding-bottom: 10px;
   text-align: center;
+  padding-top: 1%;
 }
 #top-bar a {
   font-size: 16px;
@@ -65,6 +66,7 @@
 #content-left {
   background-color: white;
   width: 800px;
+  /* box-shadow: 1px 1px 1px #909090; */
 }
 #article {
   text-align: left;
