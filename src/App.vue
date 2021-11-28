@@ -5,15 +5,56 @@ import { defineComponent } from "@vue/runtime-core";
 // 引入图标库
 import { QqOutlined, DownOutlined } from "@ant-design/icons-vue";
 import "./juejin_demo.css"
+import axios from "axios";
 export default defineComponent({
   components: {
     QqOutlined,
     DownOutlined,
   },
+
+  data() {
+    return {
+      inputShow: false,
+      userNameStr: "",
+      passwordStr: "",
+    }
+  },
+
+  methods: {
+    closeInput: function () {
+      this.inputShow = !this.inputShow;
+    },
+    sendPost() {
+      axios.post("/api/test", {
+        userNameStr: this.userNameStr,
+        passwordStr: this.passwordStr,
+      }).then(function (response) {
+        console.log(response);
+      }).catch(function (error) {
+        console.log(error);
+      })
+    }
+  }
 });
 </script>
 
 <template>
+  <div id="login" :class="{ inputshow: inputShow }">
+    <div id="user">
+      <p>用户名：</p>
+      <a-auto-complete style="width: 200px" placeholder="username" v-model:value="userNameStr" />
+    </div>
+    <div id="password">
+      <p>密码：</p>
+      <a-auto-complete style="width: 200px" placeholder="password" v-model:value="passwordStr" />
+    </div>
+    <div id="sure">
+      <a-button type="primary" @click="sendPost">确定</a-button>
+    </div>
+    <div id="cancel">
+      <a-button @click="closeInput" type="primary">取消</a-button>
+    </div>
+  </div>
   <!-- 导航栏 -->
   <nav id="top-bar">
     <QqOutlined spin />
@@ -46,7 +87,7 @@ export default defineComponent({
     </span>
 
     <span class="top-bar-left">
-      <a-button type="dashed">登录</a-button>
+      <a-button @click="closeInput" type="dashed">登录</a-button>
     </span>
     <hr />
   </nav>
