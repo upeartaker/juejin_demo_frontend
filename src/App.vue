@@ -1,41 +1,71 @@
 <script lang="ts">
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import { defineComponent } from "@vue/runtime-core";
+import { defineComponent } from '@vue/runtime-core'
 // 引入图标库
-import { QqOutlined, DownOutlined } from "@ant-design/icons-vue";
-import "./juejin_demo.css"
-import axios from "axios";
+import { QqOutlined, DownOutlined } from '@ant-design/icons-vue'
+import './juejin_demo.css'
+import axios from 'axios'
 export default defineComponent({
   components: {
     QqOutlined,
-    DownOutlined,
+    DownOutlined
   },
 
   data() {
     return {
+      login: false,
       inputShow: false,
-      userNameStr: "",
-      passwordStr: "",
+      userNameStr: '',
+      passwordStr: '',
+      registerName: ''
     }
   },
 
   methods: {
     closeInput: function () {
-      this.inputShow = !this.inputShow;
+      this.inputShow = !this.inputShow
     },
-    sendPost() {
-      axios.post("/api/test", {
-        userNameStr: this.userNameStr,
-        passwordStr: this.passwordStr,
-      }).then(function (response) {
-        console.log(response);
-      }).catch(function (error) {
-        console.log(error);
-      })
+    lonIn() {
+      axios
+        .post('/api/cat/login', {
+          userNameStr: this.userNameStr,
+          passwordStr: this.passwordStr
+        })
+        .then((response) => {
+          alert(response.data)
+          if (response.data === '登陆成功') {
+            this.closeInput()
+            this.login = true
+          }
+          console.log(response)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+    register() {
+      axios
+        .post('/api/cat/addone', {
+          registerStr: this.registerName
+        })
+        .then(function (response) {
+          console.log(response)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+    writeArticle() {
+      if (this.login) {
+
+      }
+      else {
+        this.closeInput()
+      }
     }
   }
-});
+})
 </script>
 
 <template>
@@ -49,7 +79,7 @@ export default defineComponent({
       <a-auto-complete style="width: 200px" placeholder="password" v-model:value="passwordStr" />
     </div>
     <div id="sure">
-      <a-button type="primary" @click="sendPost">确定</a-button>
+      <a-button type="primary" @click="lonIn">确定</a-button>
     </div>
     <div id="cancel">
       <a-button @click="closeInput" type="primary">取消</a-button>
@@ -76,7 +106,7 @@ export default defineComponent({
       <a-dropdown>
         <template #overlay>
           <a-menu>
-            <a-menu-item key="1">发布沸点</a-menu-item>
+            <a-menu-item key="1" @click="writeArticle">发布沸点</a-menu-item>
           </a-menu>
         </template>
         <a-button>
