@@ -28,9 +28,9 @@ export default defineComponent({
     },
     lonIn() {
       axios
-        .post('/api/cat/login', {
-          userNameStr: this.userNameStr,
-          passwordStr: this.passwordStr
+        .post('/api/auth/login', {
+          username: this.userNameStr,
+          password: this.passwordStr
         })
         .then((response) => {
           alert(response.data)
