@@ -31,16 +31,12 @@ export default defineComponent({
         .post('/api/auth/login', {
           username: this.userNameStr,
           password: this.passwordStr
-        })
-        .then((response) => {
-          alert(response.data)
-          if (response.data === '登陆成功') {
-            this.closeInput()
-            this.login = true
-          }
-          console.log(response)
+        }).then((response) => {
+          alert("登陆成功")
+          console.log(response.data)
         })
         .catch(function (error) {
+          alert("登录失败,请检查用户名和密码")
           console.log(error)
         })
     },
