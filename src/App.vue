@@ -18,10 +18,12 @@ export default defineComponent({
       inputShow: false,
       userNameStr: '',
       passwordStr: '',
-      registerName: ''
+      registerName: '',
     }
   },
+  computed: {
 
+  },
   methods: {
     closeInput: function () {
       this.inputShow = !this.inputShow
@@ -33,12 +35,20 @@ export default defineComponent({
           password: this.passwordStr
         }).then((response) => {
           alert("登陆成功")
-          console.log(response.data)
+          this.login = true
+          this.closeInput()
+          localStorage.setItem("token", response.data.token)
         })
         .catch(function (error) {
           alert("登录失败,请检查用户名和密码")
           console.log(error)
         })
+    },
+    getAll() {
+      axios.get("/api/cat/allUser", {
+        headers: { "token": String(localStorage.getItem("token")) }
+      }
+      )
     },
     register() {
       axios
@@ -51,6 +61,10 @@ export default defineComponent({
         .catch(function (error) {
           console.log(error)
         })
+    },
+    exitUse() {
+      this.login = false;
+      localStorage.setItem("token", "");
     },
     writeArticle() {
       if (this.login) {
@@ -85,7 +99,7 @@ export default defineComponent({
   <nav id="top-bar">
     <QqOutlined spin />
     <a>企鹅掘金</a>
-    <a href="#">沸点</a>
+    <a href="#" @click="getAll">沸点</a>
     <a href="#">咨询</a>
     <a href="#">课程</a>
     <a href="#">活动</a>
@@ -112,8 +126,12 @@ export default defineComponent({
       </a-dropdown>
     </span>
 
-    <span class="top-bar-left">
-      <a-button @click="closeInput" type="dashed">登录</a-button>
+    <span class="top-bar-left" :class="{ 'loginshow': login }">
+      <a-button @click="closeInput">登录</a-button>
+    </span>
+    <span class="top-bar-left" :class="{ 'loginshow': !login }">
+      <input type="button" :value="userNameStr" />
+      <a-button @click="exitUse">退出</a-button>
     </span>
     <hr />
   </nav>
