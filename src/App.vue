@@ -19,6 +19,9 @@ export default defineComponent({
       userNameStr: '',
       passwordStr: '',
       registerName: '',
+      artiInfo: {
+        content: "woyuge",
+      }
     }
   },
   computed: {
@@ -68,7 +71,18 @@ export default defineComponent({
     },
     writeArticle() {
       if (this.login) {
-
+        axios.post("/api/cat/addarticle", {
+          artiInfo: this.artiInfo.content,
+          username: this.userNameStr,
+        }, {
+          headers: { "token": String(localStorage.getItem("token")) }
+        })
+          .then(function (response) {
+            console.log(response)
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
       }
       else {
         this.closeInput()
