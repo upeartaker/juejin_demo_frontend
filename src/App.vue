@@ -16,12 +16,12 @@ export default defineComponent({
     return {
       login: false,
       inputShow: false,
-      userNameStr: '',
-      passwordStr: '',
-      registerName: '',
-      artiInfo: {
-        content: "woyuge",
-      }
+      userNameStr: "",
+      passwordStr: "",
+      registerName: "",
+      articleName: "",
+      content: "",
+
     }
   },
   computed: {
@@ -72,8 +72,9 @@ export default defineComponent({
     writeArticle() {
       if (this.login) {
         axios.post("/api/cat/addarticle", {
-          artiInfo: this.artiInfo.content,
+          content: this.content,
           username: this.userNameStr,
+          articlename: this.articleName
         }, {
           headers: { "token": String(localStorage.getItem("token")) }
         })
@@ -95,11 +96,11 @@ export default defineComponent({
 <template>
   <div id="login" :class="{ inputshow: inputShow }">
     <div id="user">
-      <p>用户名：</p>
+      <p>用户名:</p>
       <a-auto-complete style="width: 200px" placeholder="username" v-model:value="userNameStr" />
     </div>
     <div id="password">
-      <p>密码：</p>
+      <p>密码:</p>
       <a-auto-complete style="width: 200px" placeholder="password" v-model:value="passwordStr" />
     </div>
     <div id="sure">
