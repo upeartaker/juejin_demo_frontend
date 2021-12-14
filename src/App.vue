@@ -6,10 +6,17 @@ import { defineComponent } from '@vue/runtime-core'
 import { QqOutlined, DownOutlined } from '@ant-design/icons-vue'
 import './juejin_demo.css'
 import axios from 'axios'
+// 引入
+import { quillEditor } from "vue-quill-editor"
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
 export default defineComponent({
   components: {
     QqOutlined,
-    DownOutlined
+    DownOutlined,
+    quillEditor
   },
 
   data() {
@@ -21,6 +28,7 @@ export default defineComponent({
       registerName: "",
       articleName: "",
       content: "",
+      writeShow: false,
 
     }
   },
@@ -84,16 +92,22 @@ export default defineComponent({
           .catch(function (error) {
             console.log(error)
           })
+
+        this.writeShow = true
       }
       else {
         this.closeInput()
       }
+    },
+    closeWrite() {
+      this.writeShow = true
     }
   }
 })
 </script>
 
 <template>
+  <!-- 登录窗口 -->
   <div id="login" :class="{ inputshow: inputShow }">
     <div id="user">
       <p>用户名:</p>
@@ -108,6 +122,15 @@ export default defineComponent({
     </div>
     <div id="cancel">
       <a-button @click="closeInput" type="primary">取消</a-button>
+    </div>
+  </div>
+  <!-- 写作窗口 -->
+  <div id="write" :class="{ inputshow: writeShow }">
+    <input type="text" :value="articleName" placeholder="输入文章标题..." />
+    <textarea :value="content"></textarea>
+    <div class :class="{ 'loginshow': login }">
+      <a-button @click="writeArticle">发布</a-button>
+      <a-button @click="closeWrite">关闭</a-button>
     </div>
   </div>
   <!-- 导航栏 -->
