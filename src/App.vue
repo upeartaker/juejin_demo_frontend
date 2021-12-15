@@ -7,7 +7,7 @@ import { QqOutlined, DownOutlined } from '@ant-design/icons-vue'
 import './juejin_demo.css'
 import axios from 'axios'
 // 引入
-import { quillEditor } from "vue-quill-editor"
+// import { quillEditor } from "vue-quill-editor"
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
@@ -15,20 +15,19 @@ import 'quill/dist/quill.bubble.css'
 export default defineComponent({
   components: {
     QqOutlined,
-    DownOutlined,
-    quillEditor
+    DownOutlined
   },
 
   data() {
     return {
       login: false,
-      inputShow: false,
+      inputShow: true,
       userNameStr: "",
       passwordStr: "",
       registerName: "",
       articleName: "",
       content: "",
-      writeShow: false,
+      writeShow: true,
 
     }
   },
@@ -78,29 +77,29 @@ export default defineComponent({
       localStorage.setItem("token", "");
     },
     writeArticle() {
-      if (this.login) {
-        axios.post("/api/cat/addarticle", {
-          content: this.content,
-          username: this.userNameStr,
-          articlename: this.articleName
-        }, {
-          headers: { "token": String(localStorage.getItem("token")) }
+      axios.post("/api/cat/addarticle", {
+        content: this.content,
+        username: this.userNameStr,
+        articlename: this.articleName
+      }, {
+        headers: { "token": String(localStorage.getItem("token")) }
+      })
+        .then(function (response) {
+          console.log(response)
         })
-          .then(function (response) {
-            console.log(response)
-          })
-          .catch(function (error) {
-            console.log(error)
-          })
+        .catch(function (error) {
+          console.log(error)
+        })
 
-        this.writeShow = true
+      this.writeShow = true
+    },
+    closeWrite() {
+      if (this.login) {
+        this.writeShow = !this.writeShow
       }
       else {
         this.closeInput()
       }
-    },
-    closeWrite() {
-      this.writeShow = true
     }
   }
 })
@@ -126,9 +125,9 @@ export default defineComponent({
   </div>
   <!-- 写作窗口 -->
   <div id="write" :class="{ inputshow: writeShow }">
-    <input type="text" :value="articleName" placeholder="输入文章标题..." />
-    <textarea :value="content"></textarea>
-    <div class :class="{ 'loginshow': login }">
+    <input type="text" v-model="articleName" placeholder="输入文章标题..." />
+    <textarea v-model="content"></textarea>
+    <div class :class="{ 'loginshow': !login }">
       <a-button @click="writeArticle">发布</a-button>
       <a-button @click="closeWrite">关闭</a-button>
     </div>
@@ -154,7 +153,7 @@ export default defineComponent({
       <a-dropdown>
         <template #overlay>
           <a-menu>
-            <a-menu-item key="1" @click="writeArticle">发布沸点</a-menu-item>
+            <a-menu-item key="1" @click="closeWrite">发布沸点</a-menu-item>
           </a-menu>
         </template>
         <a-button>
