@@ -54,8 +54,8 @@ export default defineComponent({
           console.log(error)
         })
     },
-    getAll() {
-      axios.get("/api/cat/allUser", {
+    getArticle() {
+      axios.get("/api/cat/getarticle", {
         headers: { "token": String(localStorage.getItem("token")) }
       }
       )
@@ -136,7 +136,7 @@ export default defineComponent({
   <nav id="top-bar">
     <QqOutlined spin />
     <a>企鹅掘金</a>
-    <a href="#" @click="getAll">沸点</a>
+    <a href="#" @click="getArticle">沸点</a>
     <a href="#">咨询</a>
     <a href="#">课程</a>
     <a href="#">活动</a>
@@ -210,7 +210,7 @@ export default defineComponent({
           </ul>
           <div class="article-content">
             <b>2021最后一次更文挑战，倒计时最后一周!错过这次要等明年啦</b>
-            <p>最后参与的机会，拿闯关奖励，抽终极幸运大奖！别犹豫啦，快来参加！</p>
+            <p>最后参与的机会，拿闯关奖励，抽终极幸运大奖!别犹豫啦，快来参加!</p>
             <hr />
           </div>
         </div>
