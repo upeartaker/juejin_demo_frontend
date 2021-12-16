@@ -25,8 +25,9 @@ export default defineComponent({
       userNameStr: "",
       passwordStr: "",
       registerName: "",
-      articleName: "",
+      articleName: "lalala",
       content: "",
+      articleContent: "最后参与的机会，拿闯关奖励，抽终极幸运大奖!别犹豫啦，快来参加!",
       writeShow: true,
 
     }
@@ -55,10 +56,19 @@ export default defineComponent({
         })
     },
     getArticle() {
-      axios.get("/api/cat/getarticle", {
-        headers: { "token": String(localStorage.getItem("token")) }
-      }
-      )
+      axios.post("/api/cat/getarticle", {
+        username: this.userNameStr,
+        articlename: this.articleName
+      },
+        { headers: { "token": String(localStorage.getItem("token")) } }
+      ).then((response) => {
+        console.log(response.data)
+        this.articleContent = response.data
+      })
+        .catch(function (error) {
+          alert("获取文章失败")
+          console.log(error)
+        })
     },
     register() {
       axios
@@ -210,7 +220,7 @@ export default defineComponent({
           </ul>
           <div class="article-content">
             <b>2021最后一次更文挑战，倒计时最后一周!错过这次要等明年啦</b>
-            <p>最后参与的机会，拿闯关奖励，抽终极幸运大奖!别犹豫啦，快来参加!</p>
+            <p>{{ articleContent }}</p>
             <hr />
           </div>
         </div>
