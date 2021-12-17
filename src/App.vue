@@ -22,9 +22,11 @@ export default defineComponent({
     return {
       login: false,
       inputShow: true,
+      registerShow: false,
       userNameStr: "",
       passwordStr: "",
       registerName: "",
+      registerPsd: "",
       articleName: "lalala",
       content: "",
       articleContent: "最后参与的机会，拿闯关奖励，抽终极幸运大奖!别犹豫啦，快来参加!",
@@ -71,16 +73,28 @@ export default defineComponent({
         })
     },
     register() {
+      if (this.registerName === "" || this.registerPsd === "") {
+        alert("用户名或密码为空")
+        return
+      }
       axios
         .post('/api/cat/addone', {
-          registerStr: this.registerName
+          registerstr: this.registerName,
+          registerpsd: this.registerPsd
         })
-        .then(function (response) {
-          console.log(response)
+        .then((response) => {
+          this.closeregister()
+          this.userNameStr = this.registerName
+          this.passwordStr = this.registerPsd
+          this.lonIn()
+          this.closeInput()
+          alert(response.data)
+          console.log(response.data)
         })
         .catch(function (error) {
           console.log(error)
         })
+
     },
     exitUse() {
       this.login = false;
@@ -110,6 +124,9 @@ export default defineComponent({
       else {
         this.closeInput()
       }
+    },
+    closeregister() {
+      this.registerShow = !this.registerShow
     }
   }
 })
@@ -133,6 +150,23 @@ export default defineComponent({
       <a-button @click="closeInput" type="primary">取消</a-button>
     </div>
   </div>
+  <!-- 注册窗口 -->
+  <div id="login" v-if="registerShow">
+    <div id="user">
+      <p>用户名:</p>
+      <a-auto-complete style="width: 200px" placeholder="username" v-model:value="registerName" />
+    </div>
+    <div id="password">
+      <p>密码:</p>
+      <a-auto-complete style="width: 200px" placeholder="password" v-model:value="registerPsd" />
+    </div>
+    <div id="sure">
+      <a-button type="primary" @click="register">注册</a-button>
+    </div>
+    <div id="cancel">
+      <a-button @click="closeregister" type="primary">取消</a-button>
+    </div>
+  </div>
   <!-- 写作窗口 -->
   <div id="write" :class="{ inputshow: writeShow }">
     <input type="text" v-model="articleName" placeholder="输入文章标题..." />
@@ -146,7 +180,7 @@ export default defineComponent({
   <nav id="top-bar">
     <QqOutlined spin />
     <a>企鹅掘金</a>
-    <a href="#" @click="getArticle">沸点</a>
+    <a href="#">沸点</a>
     <a href="#">咨询</a>
     <a href="#">课程</a>
     <a href="#">活动</a>
@@ -163,7 +197,10 @@ export default defineComponent({
       <a-dropdown>
         <template #overlay>
           <a-menu>
-            <a-menu-item key="1" @click="closeWrite">发布沸点</a-menu-item>
+            <div>
+              <a-menu-item key="1" @click="closeWrite">发布沸点</a-menu-item>
+            </div>
+            <a-menu-item key="2" @click="getArticle" v-if="login">获取文章</a-menu-item>
           </a-menu>
         </template>
         <a-button>
@@ -175,9 +212,10 @@ export default defineComponent({
 
     <span class="top-bar-left" :class="{ 'loginshow': login }">
       <a-button @click="closeInput">登录</a-button>
+      <a-button @click="closeregister" v-if="!login">注册</a-button>
     </span>
-    <span class="top-bar-left" :class="{ 'loginshow': !login }">
-      <input type="button" :value="userNameStr" />
+    <span class="top-bar-left" v-if="login">
+      <a-button>{{ userNameStr }}</a-button>
       <a-button @click="exitUse">退出</a-button>
     </span>
     <hr />
