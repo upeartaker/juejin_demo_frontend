@@ -11,11 +11,13 @@ import axios from 'axios'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
+import ArticleListVue from './components/ArticleList.vue'
 
 export default defineComponent({
   components: {
     QqOutlined,
-    DownOutlined
+    DownOutlined,
+    ArticleListVue
   },
 
   data() {
@@ -27,8 +29,12 @@ export default defineComponent({
       registerName: "",
       articleName: "lalala",
       content: "",
-      articleContent: "最后参与的机会，拿闯关奖励，抽终极幸运大奖!别犹豫啦，快来参加!",
       writeShow: true,
+      articles: [{
+        author: "",
+        articleTitle: "",
+        articleContent: ""
+      }]
 
     }
   },
@@ -210,21 +216,7 @@ export default defineComponent({
         </ul>
       </div>
       <!-- 推荐帖子 -->
-      <div id="article">
-        <!-- 帖子1 -->
-        <div class="article-part">
-          <!-- 作者/时间/分类 -->
-          <ul class="article-author">
-            <li id="id">稀土君</li>
-            <li id="time">2天前</li>
-          </ul>
-          <div class="article-content">
-            <b>2021最后一次更文挑战，倒计时最后一周!错过这次要等明年啦</b>
-            <p>{{ articleContent }}</p>
-            <hr />
-          </div>
-        </div>
-      </div>
+      <ArticleListVue :vueArticles="articles"></ArticleListVue>
     </div>
   </div>
 </template>
