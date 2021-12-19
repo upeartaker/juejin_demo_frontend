@@ -1,18 +1,11 @@
-<script lang="ts">
+<script lang="js">
 
 import { defineComponent } from "vue";
 export default defineComponent({
   components: {},
 
-  data() {
-    return {
-      vueArticles: [{
-        author: "",
-        articleTitle: "",
-        articleContent: "",
-        time: ""
-      }]
-    }
+  data () {
+    return {}
   },
   props: {
     vueArticles: {

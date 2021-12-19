@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="js">
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
 import { defineComponent } from '@vue/runtime-core'
@@ -20,22 +20,19 @@ export default defineComponent({
     ArticleListVue
   },
 
-  data() {
+  data () {
     return {
       login: false,
       inputShow: true,
+      registerShow: false,
       userNameStr: "",
       passwordStr: "",
       registerName: "",
-      articleName: "lalala",
+      registerPsd: "",
+      articleName: "",
       content: "",
       writeShow: true,
-      articles: [{
-        author: "",
-        articleTitle: "",
-        articleContent: ""
-      }]
-
+      articles: [],
     }
   },
   computed: {
@@ -45,7 +42,7 @@ export default defineComponent({
     closeInput: function () {
       this.inputShow = !this.inputShow
     },
-    lonIn() {
+    lonIn () {
       axios
         .post('/api/auth/login', {
           username: this.userNameStr,
@@ -61,38 +58,62 @@ export default defineComponent({
           console.log(error)
         })
     },
-    getArticle() {
+    getArticle () {
       axios.post("/api/cat/getarticle", {
         username: this.userNameStr,
-        articlename: this.articleName
       },
         { headers: { "token": String(localStorage.getItem("token")) } }
       ).then((response) => {
-        console.log(response.data)
-        this.articleContent = response.data
+        if (response.data.length === 0) {
+          alert("无文章")
+        }
+        this.articles.length = 0
+        for (let i = 0; i < response.data.length; i++) {
+          const one = {
+            author: response.data[i].userName,
+            articleTitle: response.data[i].articleName,
+            articleContent: response.data[i].content,
+            time: response.data[i].updateAt
+          }
+          this.articles.push(one)
+
+        }
       })
         .catch(function (error) {
           alert("获取文章失败")
           console.log(error)
         })
     },
-    register() {
+    register () {
+      if (this.registerName === "" || this.registerPsd === "") {
+        alert("用户名或密码为空")
+        return
+      }
       axios
         .post('/api/cat/addone', {
-          registerStr: this.registerName
+          registerstr: this.registerName,
+          registerpsd: this.registerPsd
         })
-        .then(function (response) {
-          console.log(response)
+        .then((response) => {
+          this.closeregister()
+          this.userNameStr = this.registerName
+          this.passwordStr = this.registerPsd
+          this.lonIn()
+          this.closeInput()
+          alert(response.data)
+          console.log(response.data)
         })
         .catch(function (error) {
           console.log(error)
         })
+
     },
-    exitUse() {
+    exitUse () {
       this.login = false;
       localStorage.setItem("token", "");
+      this.articles.length = 0
     },
-    writeArticle() {
+    writeArticle () {
       axios.post("/api/cat/addarticle", {
         content: this.content,
         username: this.userNameStr,
@@ -109,13 +130,19 @@ export default defineComponent({
 
       this.writeShow = true
     },
-    closeWrite() {
+    closeWrite () {
       if (this.login) {
         this.writeShow = !this.writeShow
       }
       else {
         this.closeInput()
       }
+    },
+    closeregister () {
+      this.registerShow = !this.registerShow
+    },
+    personalCenter () {
+
     }
   }
 })
@@ -139,6 +166,23 @@ export default defineComponent({
       <a-button @click="closeInput" type="primary">取消</a-button>
     </div>
   </div>
+  <!-- 注册窗口 -->
+  <div id="login" v-if="registerShow">
+    <div id="user">
+      <p>用户名:</p>
+      <a-auto-complete style="width: 200px" placeholder="username" v-model:value="registerName" />
+    </div>
+    <div id="password">
+      <p>密码:</p>
+      <a-auto-complete style="width: 200px" placeholder="password" v-model:value="registerPsd" />
+    </div>
+    <div id="sure">
+      <a-button type="primary" @click="register">注册</a-button>
+    </div>
+    <div id="cancel">
+      <a-button @click="closeregister" type="primary">取消</a-button>
+    </div>
+  </div>
   <!-- 写作窗口 -->
   <div id="write" :class="{ inputshow: writeShow }">
     <input type="text" v-model="articleName" placeholder="输入文章标题..." />
@@ -148,11 +192,12 @@ export default defineComponent({
       <a-button @click="closeWrite">关闭</a-button>
     </div>
   </div>
+  <!-- 个人中心 -->
   <!-- 导航栏 -->
   <nav id="top-bar">
     <QqOutlined spin />
     <a>企鹅掘金</a>
-    <a href="#" @click="getArticle">沸点</a>
+    <a href="#">沸点</a>
     <a href="#">咨询</a>
     <a href="#">课程</a>
     <a href="#">活动</a>
@@ -169,7 +214,10 @@ export default defineComponent({
       <a-dropdown>
         <template #overlay>
           <a-menu>
-            <a-menu-item key="1" @click="closeWrite">发布沸点</a-menu-item>
+            <div>
+              <a-menu-item key="1" @click="closeWrite">发布沸点</a-menu-item>
+            </div>
+            <a-menu-item key="2" @click="getArticle" v-if="login">获取文章</a-menu-item>
           </a-menu>
         </template>
         <a-button>
@@ -181,9 +229,10 @@ export default defineComponent({
 
     <span class="top-bar-left" :class="{ 'loginshow': login }">
       <a-button @click="closeInput">登录</a-button>
+      <a-button @click="closeregister" v-if="!login">注册</a-button>
     </span>
-    <span class="top-bar-left" :class="{ 'loginshow': !login }">
-      <input type="button" :value="userNameStr" />
+    <span class="top-bar-left" v-if="login">
+      <a-button :click="articles">{{ userNameStr }}</a-button>
       <a-button @click="exitUse">退出</a-button>
     </span>
     <hr />
