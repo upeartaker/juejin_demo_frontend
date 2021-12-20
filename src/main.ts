@@ -7,6 +7,6 @@ import router from './router/router'
 
 // import { QqOutlined, DownOutlined } from "@ant-design/icons-vue";
 
-const app = createApp(App).use(Antd).use(router)
-//  setup(app)
+const app = createApp(App).use(Antd)
+app.use(router)
 app.mount('#app')

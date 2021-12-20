@@ -20,7 +20,7 @@ export default defineComponent({
   <!-- 推荐帖子 -->
   <div id="article">
     <!-- 帖子1 -->
-    <div class="article-part" v-for="(article,index) in vueArticles" :key="index">
+    <div class="article-part" v-for="(article, index) in vueArticles" :key="index">
       <!-- 作者/时间/分类 -->
       <ul class="article-author">
         <li id="id">{{ article.author }}</li>
