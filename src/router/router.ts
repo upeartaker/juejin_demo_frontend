@@ -2,7 +2,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 //第三方库需要use一下才能用
 
-import personalCenter from '../components/personalCenter.vue'
+import personalCenter from '../components/PersonalCenter.vue'
 import home from '../views/Home.vue'
 
 //定义routes路由的集合，数组类型

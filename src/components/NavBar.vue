@@ -1,6 +1,5 @@
-<script lang=js>
+<script lang="js">
 
-import '../juejin_demo.css'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
@@ -15,26 +14,40 @@ export default defineComponent({
   },
   data () {
     return {
-
     }
   },
   props: {
-    // 根组件信息
-    rootInfo: {
-      type: Object,
+    login: {
+      type: Boolean,
+      required: true
+    },
+    userNameStr: {
+      type: String,
       required: true
     }
   },
   methods: {
     writeArticle () {
       // 如果登录成功则弹出写文章界面，否则弹出登录框
-      if (this.rootInfo.login) {
-        this.rootInfo.writeShow = !this.rootInfo.writeShow
+      if (this.login) {
+        this.$emit('changeWriteShow')
       }
       else {
-        this.rootInfo.inputShow = !this.rootInfo.inputShow
+        this.$emit('changeLoginShow')
       }
     },
+    getArticle () {
+      this.$emit('getArticle')
+    },
+    changeLoginShow () {
+      this.$emit('changeLoginShow')
+    },
+    changeRegisterShow () {
+      this.$emit('changeRegisterShow')
+    },
+    exitLogin () {
+      this.$emit('exitLogin')
+    }
   }
 })
 </script>
@@ -62,7 +75,7 @@ export default defineComponent({
             <div>
               <a-menu-item key="1" @click="writeArticle">发布沸点</a-menu-item>
             </div>
-            <a-menu-item key="2" @click="getArticle" v-if="login">获取文章</a-menu-item>
+            <a-menu-item key="2" @click="getArticle" v-if="this.login">获取文章</a-menu-item>
           </a-menu>
         </template>
         <a-button>
@@ -73,11 +86,15 @@ export default defineComponent({
     </span>
 
     <span class="top-bar-left">
-      <a-button v-if="!this.rootInfo.login" @click="closeInput">登录</a-button>
-      <a-button v-if="this.rootInfo.login">{{ this.rootInfo.userNameStr }}</a-button>
+      <a-button v-if="!this.login" @click="changeLoginShow">登录</a-button>
+      <a-button v-if="this.login">
+        {{
+          this.userNameStr
+        }}
+      </a-button>
 
-      <a-button v-if="!this.rootInfo.login" @click="closeregister">注册</a-button>
-      <a-button v-if="this.rootInfo.login" @click="closeregister">退出</a-button>
+      <a-button v-if="!this.login" @click="changeRegisterShow">注册</a-button>
+      <a-button v-if="this.login" @click="exitLogin">退出</a-button>
     </span>
     <hr />
   </nav>
