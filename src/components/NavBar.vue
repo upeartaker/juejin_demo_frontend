@@ -6,6 +6,7 @@ import 'quill/dist/quill.bubble.css'
 
 import { defineComponent } from "vue";
 import { QqOutlined, DownOutlined } from '@ant-design/icons-vue'
+import axios from 'axios';
 
 export default defineComponent({
   components: {
@@ -14,22 +15,27 @@ export default defineComponent({
   },
   data () {
     return {
+      articles: []
     }
   },
   props: {
-    login: {
+    loginInfo: {
       type: Boolean,
       required: true
     },
     userNameStr: {
       type: String,
       required: true
+    },
+    articlesInfo: {
+      type: Array,
+      required: true
     }
   },
   methods: {
     writeArticle () {
       // 如果登录成功则弹出写文章界面，否则弹出登录框
-      if (this.login) {
+      if (this.loginInfo) {
         this.$emit('changeWriteShow')
       }
       else {
@@ -37,7 +43,30 @@ export default defineComponent({
       }
     },
     getArticle () {
-      this.$emit('getArticle')
+      axios.post("/api/cat/getarticle", {
+        username: this.userNameStr,
+      },
+        { headers: { "token": String(localStorage.getItem("token")) } }
+      ).then((response) => {
+        if (response.data.length === 0) {
+          alert("无文章")
+        }
+        this.articles.length = 0
+        for (let i = 0; i < response.data.length; i++) {
+          const one = {
+            author: response.data[i].userName,
+            articleTitle: response.data[i].articleName,
+            articleContent: response.data[i].content,
+            time: response.data[i].updateAt
+          }
+          this.articles.push(one)
+        }
+        this.$emit('update:articlesInfo', this.articles)
+      })
+        .catch(function (error) {
+          alert("获取文章失败")
+          console.log(error)
+        })
     },
     changeLoginShow () {
       this.$emit('changeLoginShow')
@@ -46,7 +75,8 @@ export default defineComponent({
       this.$emit('changeRegisterShow')
     },
     exitLogin () {
-      this.$emit('exitLogin')
+      localStorage.setItem("token", "")
+      this.$emit("update:loginInfo", false)
     }
   }
 })
@@ -75,7 +105,7 @@ export default defineComponent({
             <div>
               <a-menu-item key="1" @click="writeArticle">发布沸点</a-menu-item>
             </div>
-            <a-menu-item key="2" @click="getArticle" v-if="this.login">获取文章</a-menu-item>
+            <a-menu-item key="2" @click="getArticle" v-if="loginInfo">获取文章</a-menu-item>
           </a-menu>
         </template>
         <a-button>
@@ -86,15 +116,15 @@ export default defineComponent({
     </span>
 
     <span class="top-bar-left">
-      <a-button v-if="!this.login" @click="changeLoginShow">登录</a-button>
-      <a-button v-if="this.login">
+      <a-button v-if="!loginInfo" @click="changeLoginShow">登录</a-button>
+      <a-button v-if="loginInfo">
         {{
           this.userNameStr
         }}
       </a-button>
 
-      <a-button v-if="!this.login" @click="changeRegisterShow">注册</a-button>
-      <a-button v-if="this.login" @click="exitLogin">退出</a-button>
+      <a-button v-if="!loginInfo" @click="changeRegisterShow">注册</a-button>
+      <a-button v-if="loginInfo" @click="exitLogin">退出</a-button>
     </span>
     <hr />
   </nav>

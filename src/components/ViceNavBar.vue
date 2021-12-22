@@ -1,3 +1,11 @@
+<script>
+
+import { defineComponent } from "vue";
+
+export default defineComponent({
+
+})
+</script>
 <template>
   <nav id="top-vice-bar">
     <ul>
