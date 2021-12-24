@@ -7,8 +7,12 @@ export default defineComponent({
   data () {
     return {
       content: "",
-      userNameStr: "",
       articleName: ""
+    }
+  },
+  computed: {
+    userNameStr: function () {
+      return this.$store.getters.getUserName
     }
   },
   props: {
@@ -45,7 +49,7 @@ export default defineComponent({
 <template>
   <div id="write" v-if="writeShow">
     <input type="text" v-model="articleName" placeholder="输入文章标题..." />
-    <textarea v-model="writeContent"></textarea>
+    <textarea v-model="content"></textarea>
     <div>
       <a-button @click="writing">发布</a-button>
       <a-button @click="changeWriteShow">关闭</a-button>

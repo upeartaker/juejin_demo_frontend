@@ -7,11 +7,28 @@ import 'quill/dist/quill.bubble.css'
 import { defineComponent } from "vue";
 import { QqOutlined, DownOutlined } from '@ant-design/icons-vue'
 import axios from 'axios';
+import { useStore } from 'vuex'
 
 export default defineComponent({
   components: {
     QqOutlined,
     DownOutlined
+  },
+  setup () {
+    const store = useStore()
+
+    const changeLoginState = (newState) => {
+      store.dispatch('asyncChangeLoginState', newState)
+    }
+    return { changeLoginState }
+  },
+  computed: {
+    login: function () {
+      return this.$store.getters.getLoginState
+    },
+    userName: function () {
+      return this.$store.getters.getUserName
+    }
   },
   data () {
     return {
@@ -19,14 +36,6 @@ export default defineComponent({
     }
   },
   props: {
-    loginInfo: {
-      type: Boolean,
-      required: true
-    },
-    userNameStr: {
-      type: String,
-      required: true
-    },
     articlesInfo: {
       type: Array,
       required: true
@@ -35,7 +44,7 @@ export default defineComponent({
   methods: {
     writeArticle () {
       // 如果登录成功则弹出写文章界面，否则弹出登录框
-      if (this.loginInfo) {
+      if (this.login) {
         this.$emit('changeWriteShow')
       }
       else {
@@ -44,7 +53,7 @@ export default defineComponent({
     },
     getArticle () {
       axios.post("/api/cat/getarticle", {
-        username: this.userNameStr,
+        username: this.userName,
       },
         { headers: { "token": String(localStorage.getItem("token")) } }
       ).then((response) => {
@@ -76,7 +85,7 @@ export default defineComponent({
     },
     exitLogin () {
       localStorage.setItem("token", "")
-      this.$emit("update:loginInfo", false)
+      this.changeLoginState(false)
     }
   }
 })
@@ -84,7 +93,7 @@ export default defineComponent({
 <template>
   <nav id="top-bar">
     <QqOutlined spin />
-    <a>企鹅掘金</a>
+    <a @click="this.$router.push({ name: 'personal' })">企鹅掘金</a>
     <a>沸点</a>
     <a>咨询</a>
     <a>课程</a>
@@ -105,7 +114,7 @@ export default defineComponent({
             <div>
               <a-menu-item key="1" @click="writeArticle">发布沸点</a-menu-item>
             </div>
-            <a-menu-item key="2" @click="getArticle" v-if="loginInfo">获取文章</a-menu-item>
+            <a-menu-item key="2" @click="getArticle" v-if="login">获取文章</a-menu-item>
           </a-menu>
         </template>
         <a-button>
@@ -116,15 +125,15 @@ export default defineComponent({
     </span>
 
     <span class="top-bar-left">
-      <a-button v-if="!loginInfo" @click="changeLoginShow">登录</a-button>
-      <a-button v-if="loginInfo">
+      <a-button v-if="!login" @click="changeLoginShow">登录</a-button>
+      <a-button v-else>
         {{
-          this.userNameStr
+          this.userName
         }}
       </a-button>
 
-      <a-button v-if="!loginInfo" @click="changeRegisterShow">注册</a-button>
-      <a-button v-if="loginInfo" @click="exitLogin">退出</a-button>
+      <a-button v-if="!login" @click="changeRegisterShow">注册</a-button>
+      <a-button v-else @click="exitLogin">退出</a-button>
     </span>
     <hr />
   </nav>

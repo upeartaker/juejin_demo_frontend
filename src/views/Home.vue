@@ -21,10 +21,8 @@ export default defineComponent({
 
   data () {
     return {
-      login: false,
       loginShow: false,
       registerShow: false,
-      userNameStr: "",
       writeShow: false,
       articles: [],
     }
@@ -41,10 +39,6 @@ export default defineComponent({
     changeRegisterShow () {
       this.registerShow = !this.registerShow
     },
-    exitLogin () {
-      localStorage.setItem("token", "")
-      this.login = false
-    },
     personalCenter () {
       console.log(this.$route)
       this.$router.push({ name: "personal" })
@@ -56,25 +50,17 @@ export default defineComponent({
 
 <template>
   <!-- 登录窗口 -->
-  <LoginVue
-    v-model:loginInfo="login"
-    v-model:userNameInfo="userNameStr"
-    :loginShow="loginShow"
-    @changeLoginShow="changeLoginShow"
-  ></LoginVue>
+  <LoginVue :loginShow="loginShow" @changeLoginShow="changeLoginShow"></LoginVue>
   <!-- 注册窗口 -->
   <RegisterVue :registerShow="registerShow" @changeRegisterShow="changeRegisterShow"></RegisterVue>
   <!-- 写作窗口 -->
   <WriteVue :writeShow="writeShow" @changeWriteShow="changeWriteShow"></WriteVue>
   <!-- 导航栏 -->
   <NavBarVue
-    v-model:loginInfo="login"
     v-model:articlesInfo="articles"
-    :userNameStr="userNameStr"
     @changeWriteShow="changeWriteShow"
     @changeLoginShow="changeLoginShow"
     @changeRegisterShow="changeRegisterShow"
-    @exitLogin="exitLogin"
   ></NavBarVue>
   <!-- 副导航栏 -->
   <ViceNavBarVue></ViceNavBarVue>

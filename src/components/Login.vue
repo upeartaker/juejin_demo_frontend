@@ -2,8 +2,25 @@
 
 import { defineComponent } from "vue";
 import axios from "axios";
+import { useStore } from 'vuex'
 
 export default defineComponent({
+
+  setup () {
+    const store = useStore()
+
+    const changeLoginState = (newState) => {
+      store.dispatch('asyncChangeLoginState', newState)
+    }
+
+    const changeUserName = (newName) => {
+      store.dispatch('asyncChangeUserNameInfo', newName)
+    }
+
+    return { changeLoginState, changeUserName }
+  },
+  computed: {
+  },
   data () {
     return {
       userNameStr: "",
@@ -14,15 +31,7 @@ export default defineComponent({
     loginShow: {
       type: Boolean,
       required: true
-    },
-    loginInfo: {
-      type: Boolean,
-      required: true
-    },
-    userNameInfo: {
-      type: String,
-      required: true
-    },
+    }
   },
   methods: {
     logging () {
@@ -32,9 +41,9 @@ export default defineComponent({
           password: this.passwordStr
         }).then((response) => {
           alert("登陆成功")
-          // 发送登录信息给父组件
-          this.$emit('update:loginInfo', true)
-          this.$emit('update:userNameInfo', this.userNameStr)
+          // 改变登录状态和用户名
+          this.changeLoginState(true)
+          this.changeUserName(this.userNameStr)
 
           this.changeLoginShow()
           localStorage.setItem("token", response.data.token)
@@ -46,6 +55,7 @@ export default defineComponent({
     },
     changeLoginShow () {
       this.$emit('changeLoginShow')
+
     }
   }
 })
